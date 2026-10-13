@@ -1,0 +1,60 @@
+const { chromium } = require('C:/Users/ROVIO/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+(async () => {
+  fs.mkdirSync(path.join(__dirname, '../artifacts'), { recursive: true });
+  const browser = await chromium.launch({ executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', headless: true });
+  try {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, permissions: ['clipboard-read','clipboard-write'] });
+    const page = await context.newPage(), errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.goto('http://127.0.0.1:4173/');
+    assert.equal(await page.locator('#period-cost').textContent(), '$28.80');
+    await page.screenshot({ path: path.join(__dirname, '../artifacts/desktop.png'), fullPage: true });
+    await page.locator('[data-preset="light"]').click();
+    assert.equal(await page.locator('.appliance').count(), 2);
+    assert.equal(await page.locator('#period-cost').textContent(), '$29.04');
+    await page.locator('#rate').fill('0.25');
+    assert.equal(await page.locator('#period-cost').textContent(), '$45.38');
+    await page.locator('#currency').selectOption('GBP');
+    assert.equal(await page.locator('#period-cost').textContent(), '£45.38');
+    await page.locator('#days').fill('31');
+    assert.equal(await page.locator('#period-cost').textContent(), '£46.89');
+    await page.locator('#appliance-0-hours').fill('25');
+    assert.equal(await page.locator('#input-error').isVisible(), true);
+    assert.equal(await page.locator('#share').isDisabled(), true);
+    assert.equal(await page.locator('#period-cost').textContent(), '—');
+    await page.locator('#appliance-0-hours').fill('4');
+    await page.locator('#share').click();
+    const share = await page.evaluate(() => navigator.clipboard.readText());
+    assert.ok(share.includes('estimate='));
+    await page.goto(share);
+    assert.equal(await page.locator('#period-cost').textContent(), '£46.89');
+    assert.equal(await page.locator('.appliance').count(), 2);
+    const downloadPromise = page.waitForEvent('download');
+    await page.locator('#export').click();
+    const download = await downloadPromise;
+    assert.equal(download.suggestedFilename(), 'wattwise-electricity-estimate.csv');
+    await page.locator('#remember').check();
+    await page.reload();
+    assert.equal(await page.locator('#remember').isChecked(), true);
+    await page.locator('#reset').click();
+    assert.equal(await page.locator('#period-cost').textContent(), '$28.80');
+    await page.locator('#remember').uncheck();
+    assert.equal(await page.evaluate(() => localStorage.getItem('wattwise-settings-v1')), null);
+    await page.locator('[data-example="pc"]').click();
+    assert.equal(await page.locator('#period-cost').textContent(), '$8.64');
+    await page.locator('#reset').click();
+    for (const width of [320,375,768,1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `Horizontal overflow at ${width}px`);
+      if(width === 375) await page.screenshot({path:path.join(__dirname,'../artifacts/mobile.png'),fullPage:true});
+    }
+    await page.goto('http://127.0.0.1:4173/?estimate=invalid');
+    assert.match(await page.locator('#action-message').textContent(), /invalid/);
+    assert.equal(await page.locator('#period-cost').textContent(), '$28.80');
+    assert.deepEqual(errors, []);
+    console.log('Browser checks passed: inputs, totals, currency, validation, share round trip, CSV, local storage, examples, and layouts at 320/375/768/1440px. No JavaScript errors.');
+  } finally { await browser.close(); }
+})().catch(e => {console.error(e);process.exitCode=1;});

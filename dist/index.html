@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Electricity Cost Calculator — Appliance Energy Costs | WattWise</title>
+  <meta name="description" content="Calculate electricity costs from appliance watts, hours of use, and your price per kWh. Estimate daily, monthly, and yearly costs with this free energy calculator.">
+  <meta name="theme-color" content="#183e36">
+  <meta property="og:title" content="WattWise — Electricity Cost Calculator">
+  <meta property="og:description" content="A little clarity for your electricity costs. Estimate appliance energy use and see where your money goes.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wattwise-electricity-cost.danpengma3.chatgpt.site/">
+  <link rel="canonical" href="https://wattwise-electricity-cost.danpengma3.chatgpt.site/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"WattWise Electricity Cost Calculator","url":"https://wattwise-electricity-cost.danpengma3.chatgpt.site/","description":"Calculate appliance electricity costs from watts, daily usage, and your rate per kWh.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"inLanguage":"en"}</script>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/calculator.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#calculator">Skip to calculator</a>
+  <header class="site-header wrap">
+    <a class="brand" href="/" aria-label="WattWise home"><span class="brand-mark" aria-hidden="true">ϟ</span> wattwise<span class="brand-dot">.</span></a>
+    <nav aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#faq">FAQs</a><a class="nav-cta" href="#calculator">Calculate costs <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main>
+    <section class="hero wrap" aria-labelledby="page-title">
+      <div class="eyebrow"><span class="tiny-dot"></span> SMALL NUMBERS. SMARTER CHOICES.</div>
+      <h1 id="page-title">Electricity cost calculator<span class="hero-period">.</span></h1>
+      <p class="hero-copy">Know what your appliances really cost.<br>Turn watts and hours into a clearer picture of your energy use.</p>
+      <div class="hero-notes"><span>✓ Free to use</span><span>✓ No signup</span><span>✓ Calculated in your browser</span></div>
+      <div class="hero-art" aria-hidden="true"><svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="68" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="80" cy="80" r="52" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 5"/><path d="M87 36 56 85h24l-7 39 34-52H82z" fill="currentColor"/></svg><span>MAKE EVERY<br>WATT COUNT</span></div>
+    </section>
+
+    <section class="calculator-section wrap" id="calculator" aria-label="Electricity calculator">
+      <noscript><p>This calculator needs JavaScript. Enable JavaScript to change inputs. The figures below are an example for a 1,500 W heater used 4 hours daily at $0.16/kWh over 30 days.</p></noscript>
+      <form class="input-panel" id="energy-form" novalidate>
+        <div class="panel-heading"><div><span class="section-number">01 / YOUR INPUTS</span><h2>A few details. That's it.</h2></div><button type="button" class="text-button" id="reset">Reset ↺</button></div>
+        <div class="settings-grid">
+          <div class="field"><label for="rate">Electricity rate <span class="label-note">per kWh</span></label><div class="input-unit"><span id="rate-symbol">$</span><input id="rate" type="number" min="0" max="1000000" step="any" value="0.16" inputmode="decimal" required aria-describedby="rate-help"></div></div>
+          <div class="field"><label for="currency">Currency</label><select id="currency"><option value="USD">USD — US Dollar</option><option value="GBP">GBP — British Pound</option><option value="EUR">EUR — Euro</option><option value="CAD">CAD — Canadian Dollar</option><option value="AUD">AUD — Australian Dollar</option><option value="INR">INR — Indian Rupee</option><option value="CNY">CNY — Chinese Yuan</option></select></div>
+          <div class="field"><label for="days">Billing period</label><div class="input-unit"><input id="days" type="number" min="1" max="366" step="1" value="30" inputmode="numeric" required><span>days</span></div></div>
+        </div>
+        <p class="field-help" id="rate-help">Use the price per kWh on your electricity bill. 0.16 is an example rate, not a live tariff. Changing currency only changes the label.</p>
+        <div class="appliances-heading"><h3>Your appliances</h3><span id="appliance-count">1 appliance</span></div>
+        <div id="appliances"></div>
+        <button class="add-button" type="button" id="add-appliance"><span aria-hidden="true">＋</span> Add an appliance</button>
+        <div class="presets"><span>QUICK ADD</span><div><button type="button" data-preset="heater">Space heater</button><button type="button" data-preset="ac">Air conditioner</button><button type="button" data-preset="pc">Desktop PC</button><button type="button" data-preset="dryer">Clothes dryer</button><button type="button" data-preset="light">LED bulb</button></div></div>
+        <p class="field-help">Preset wattages are illustrative. Check the appliance label or measured average power. For appliances that cycle on and off, enter equivalent full-power hours.</p>
+        <p class="error-message" id="input-error" role="alert" hidden></p>
+        <div class="form-bottom"><label class="remember"><input id="remember" type="checkbox"> Remember my settings on this device</label><span class="local-label"><span class="tiny-dot"></span> No account needed</span></div>
+      </form>
+
+      <aside class="results" aria-label="Estimated electricity costs">
+        <div class="result-main"><span class="section-number">02 / YOUR ESTIMATE</span><div class="estimate-heading"><h2>Here's the bigger picture.</h2><span class="result-spark" aria-hidden="true">ϟ</span></div>
+          <p class="result-label" id="period-label">Estimated cost · 30 days</p><p class="big-cost" id="period-cost">$28.80</p>
+          <p class="energy-total"><strong id="period-energy">180</strong> kWh of electricity</p>
+          <div class="cost-split"><div><span>Per day</span><strong id="daily-cost">$0.96</strong></div><div><span>Per year <small>365 days</small></span><strong id="yearly-cost">$350.40</strong></div></div>
+          <p class="result-footnote">Usage estimate only. Excludes fixed charges, taxes, tiered rates, and time-of-use pricing. Yearly cost assumes the same daily use.</p>
+        </div>
+        <div class="breakdown-panel"><div class="mini-heading"><h3>Where it goes</h3><span>PER PERIOD</span></div><ul id="breakdown"></ul><div class="savings"><span class="savings-icon" aria-hidden="true">↘</span><div><h3>One hour less. A little more saved.</h3><p id="savings-text">Using each appliance one hour less per day could save $7.20 over 30 days.</p></div></div></div>
+        <div class="result-actions"><button type="button" id="share">Copy share link <span aria-hidden="true">↗</span></button><button type="button" id="export">Download CSV <span aria-hidden="true">↓</span></button></div>
+        <p class="action-message" id="action-message" role="status"></p>
+      </aside>
+    </section>
+
+    <section class="guide wrap" id="how-it-works" aria-labelledby="guide-title"><div class="guide-intro"><span class="section-number">THE MATH, MADE SIMPLE</span><h2 id="guide-title">From watts to<br>what you pay.</h2><p>A kilowatt-hour (kWh) is a unit of energy. An appliance running at 1,000 watts for one hour uses 1 kWh.</p><a href="#calculator" class="inline-link">Try your own numbers ↗</a></div><div class="guide-detail"><div class="formula"><span>THE ELECTRICITY COST FORMULA</span><p><b>Watts ÷ 1,000</b> × <b>hours</b> × <b>rate per kWh</b></p><small>= cost per day, for one appliance</small></div><ol class="steps"><li><span>01</span><div><h3>Find the wattage</h3><p>Look at your appliance label or manual. If it lists kilowatts (kW), multiply by 1,000 to get watts.</p></div></li><li><span>02</span><div><h3>Estimate daily use</h3><p>Use average running time, including partial hours. Multiply by the number of identical appliances.</p></div></li><li><span>03</span><div><h3>Use your own electricity rate</h3><p>Multiply daily kWh by your price per kWh, then by the number of days. For cents per kWh, divide by 100 first.</p></div></li></ol></div></section>
+
+    <section class="examples wrap" aria-labelledby="examples-title"><div class="section-top"><div><span class="section-number">PUT IT IN PERSPECTIVE</span><h2 id="examples-title">Little habits. Different costs.</h2></div><p>Example estimates at $0.16/kWh,<br>for 30 days. Your usage will vary.</p></div><div class="example-grid">
+      <article><span class="example-symbol" aria-hidden="true">☀</span><h3>Space heater</h3><p>1,500 W · 4 hours/day</p><strong>$28.80<span> / month</span></strong><button type="button" data-example="heater">Try this example ↗</button></article>
+      <article><span class="example-symbol" aria-hidden="true">▣</span><h3>Desktop computer</h3><p>300 W · 6 hours/day</p><strong>$8.64<span> / month</span></strong><button type="button" data-example="pc">Try this example ↗</button></article>
+      <article><span class="example-symbol" aria-hidden="true">✧</span><h3>LED light bulb</h3><p>10 W · 5 hours/day</p><strong>$0.24<span> / month</span></strong><button type="button" data-example="light">Try this example ↗</button></article>
+    </div></section>
+
+    <section class="faq wrap" id="faq" aria-labelledby="faq-title"><div><span class="section-number">A LITTLE MORE CLARITY</span><h2 id="faq-title">Good questions.<br>Clear answers.</h2></div><div class="faq-items">
+      <details open><summary>How do I calculate an appliance's electricity cost?</summary><p>Divide watts by 1,000, multiply by daily operating hours, then multiply by your electricity rate per kWh. For example, a 1,500 W heater used 4 hours a day consumes 6 kWh per day. At $0.16/kWh, that is $0.96 per day or $28.80 for 30 days.</p></details>
+      <details><summary>Will this match my electricity bill?</summary><p>This calculates the usage cost of the appliances you enter. Your bill may also include standing charges, taxes, other appliances, or rates that change with usage or time of day. To estimate an entire bill, account for those items separately.</p></details>
+      <details><summary>What is the difference between watts and kWh?</summary><p>Watts measure power at a moment in time. Kilowatt-hours measure energy used over time. A 100 W appliance running for 10 hours consumes 1 kWh, as does a 1,000 W appliance running for one hour.</p></details>
+      <details><summary>How should I estimate a refrigerator or air conditioner?</summary><p>These appliances cycle on and off and may draw different amounts of power while running. Use measured average power, the manufacturer's energy consumption figure, or equivalent full-power hours. Annual kWh from an energy label divided by 365 gives a daily energy estimate. Rated watts multiplied by 24 hours will often overestimate consumption.</p></details>
+      <details><summary>Does changing currency convert the electricity rate?</summary><p>No. It changes how the costs are displayed. Enter your rate in the currency selected. For example, if your bill says 25 pence per kWh, choose GBP and enter 0.25.</p></details>
+      <details><summary>Are my calculator inputs stored?</summary><p>Calculations run in your browser. Settings are saved in this browser only if you check “Remember my settings.” Shared links contain your calculator inputs, so anyone with that link can read them. This version has no analytics, advertising, or account signup.</p></details>
+    </div></section>
+    <section class="closing wrap"><span class="brand-mark" aria-hidden="true">ϟ</span><p>A clearer view of your energy.<br><strong>One appliance at a time.</strong></p><a href="#calculator">Back to calculator ↑</a></section>
+  </main>
+  <footer class="wrap"><a class="brand" href="/">wattwise.</a><p>Simple estimates. Informed choices.</p><span>© 2026 WattWise</span></footer>
+</body>
+</html>
