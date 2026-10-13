@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://wattwise-electricity-cost.danpengma3.chatgpt.site/sitemap.xml
+Sitemap: https://wattwise-electricity-cost.pages.dev/sitemap.xml

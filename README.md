@@ -17,7 +17,11 @@
 计算验证：`node tests/calculator.test.cjs`。
 浏览器验证：`node tests/browser.cjs`（依赖本机已安装的 Edge 和当前环境的 Playwright）。
 
-发布文件位于 `dist/`。可部署到静态托管服务，当前 Sites 身份保存在 `.openai/hosting.json`。如换域名，需同步修改 HTML canonical、og:url、结构化数据、robots.txt 与 sitemap.xml。
+发布文件位于 `dist/`。目前公开站点使用 Cloudflare Pages： https://wattwise-electricity-cost.pages.dev/ 。HTML canonical、og:url、结构化数据、robots.txt 与 sitemap.xml 已使用此地址。以后每次修改本地文件，需要重新上传才会更新线上版本。
+
+在 Cloudflare 的此项目中选择 Create a new deployment，使用 Production 环境，上传 `dist/` 文件夹或 `artifacts/wattwise-cloudflare.zip` 并完成部署。ZIP 的根目录直接包含 index.html。无需构建命令、数据库或额外服务器。
+
+原有私人 Sites 预览身份仍保存在 `.openai/hosting.json`，本次修改不会自动更新或公开该预览。原有部署记录在 `artifacts/deployment.json`；它记录的是 Sites，不是 Cloudflare 的当前状态。
 
 ## 计算边界
 
@@ -33,4 +37,9 @@
 4. 检查站点可访问性、抓取和索引状态。观察 impressions/clicks/query 数据；两周不足以判断 SEO 成败。
 5. 根据真实搜索问题补充内容。先保持低成本，不接广告和付费服务。
 
-本次未接入 Search Console 或任何统计服务。搜索引擎收录没有时间保证。
+Search Console 已通过 HTML 标记验证所有权。网站地图已提交，报告曾显示无法抓取，但 Google 的实时测试已确认抓取成功；仍需复查报告处理状态。首页收录尚未确认，收录申请遇到每日配额限制，待额度允许后对首页申请。本站未接入流量统计、广告或付费服务。搜索引擎收录没有时间保证。
+
+## GitHub 备份
+
+源码仓库： https://github.com/Tbsuu/Electricity-Cost-Calculator 。
+备份包括网站文件、说明、预览服务和测试；截图、临时上线包与本机依赖不进入仓库。GitHub 备份不会自动更新当前使用直接上传方式部署的 Cloudflare Pages 网站。
