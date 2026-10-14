@@ -10,12 +10,16 @@
 - 常见电器示例、减少使用时间的节省估算。
 - CSV 导出、包含输入的分享链接、可选本地保存。
 - 手机适配、英文说明、FAQ、标题与描述、canonical、网站地图、robots.txt、WebApplication 结构化数据。
+- 三篇英文实用指南：电暖器、空调、冰箱运行费用，附计算示例、对照表和官方参考来源。
+- 冰箱指南支持按能效标签年耗电量计算每日平均耗电、指定周期费用和全年费用。
 
 ## 本地查看
 
 在此目录运行 `node preview.cjs`，打开 http://127.0.0.1:4173/ 。
 计算验证：`node tests/calculator.test.cjs`。
 浏览器验证：`node tests/browser.cjs`（依赖本机已安装的 Edge 和当前环境的 Playwright）。
+
+指南正文源文件位于 `scripts/build-guides.cjs`；修改后运行 `node scripts/build-guides.cjs` 生成三篇静态页面及包含首页和指南的四条网址的网站地图。
 
 发布文件位于 `dist/`。目前公开站点使用 Cloudflare Pages： https://wattwise-electricity-cost.pages.dev/ 。HTML canonical、og:url、结构化数据、robots.txt 与 sitemap.xml 已使用此地址。以后每次修改本地文件，需要重新上传才会更新线上版本。
 

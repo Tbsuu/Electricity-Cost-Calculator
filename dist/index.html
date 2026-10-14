@@ -15,6 +15,7 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"WattWise Electricity Cost Calculator","url":"https://wattwise-electricity-cost.pages.dev/","description":"Calculate appliance electricity costs from watts, daily usage, and your rate per kWh.","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"inLanguage":"en"}</script>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/guides.css">
   <script src="/calculator.js" defer></script>
   <script src="/app.js" defer></script>
 </head>
@@ -22,7 +23,7 @@
   <a class="skip" href="#calculator">Skip to calculator</a>
   <header class="site-header wrap">
     <a class="brand" href="/" aria-label="WattWise home"><span class="brand-mark" aria-hidden="true">ϟ</span> wattwise<span class="brand-dot">.</span></a>
-    <nav aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#faq">FAQs</a><a class="nav-cta" href="#calculator">Calculate costs <span aria-hidden="true">↗</span></a></nav>
+    <nav aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#energy-guides">Guides</a><a class="nav-cta" href="#calculator">Calculate costs <span aria-hidden="true">↗</span></a></nav>
   </header>
   <main>
     <section class="hero wrap" aria-labelledby="page-title">
@@ -73,6 +74,11 @@
       <article><span class="example-symbol" aria-hidden="true">✧</span><h3>LED light bulb</h3><p>10 W · 5 hours/day</p><strong>$0.24<span> / month</span></strong><button type="button" data-example="light">Try this example ↗</button></article>
     </div></section>
 
+    <section class="content-guides wrap" id="energy-guides" aria-labelledby="energy-guides-title"><div class="section-top"><div><span class="section-number">EVERYDAY QUESTIONS, WORKED THROUGH</span><h2 id="energy-guides-title">A closer look at what you use.</h2></div><p>Practical examples.<br>Clear assumptions.</p></div><div class="guide-cards">
+      <article class="guide-card"><span>HEATING</span><h3>What does a space heater cost?</h3><p>Compare power settings and running time, and see how thermostat cycling changes the estimate.</p><a href="/guides/space-heater-electricity-cost/">Read the heater guide <span aria-hidden="true">↗</span></a></article>
+      <article class="guide-card"><span>COOLING</span><h3>How much energy does your AC use?</h3><p>Find the right input power and account for compressor cycling, variable speed, and measured energy.</p><a href="/guides/air-conditioner-electricity-cost/">Read the AC guide <span aria-hidden="true">↗</span></a></article>
+      <article class="guide-card"><span>EVERYDAY APPLIANCES</span><h3>Read your refrigerator's energy label.</h3><p>Turn annual kWh into a daily or yearly cost with a calculator built for energy-label figures.</p><a href="/guides/refrigerator-electricity-cost/">Read the refrigerator guide <span aria-hidden="true">↗</span></a></article>
+    </div></section>
     <section class="faq wrap" id="faq" aria-labelledby="faq-title"><div><span class="section-number">A LITTLE MORE CLARITY</span><h2 id="faq-title">Good questions.<br>Clear answers.</h2></div><div class="faq-items">
       <details open><summary>How do I calculate an appliance's electricity cost?</summary><p>Divide watts by 1,000, multiply by daily operating hours, then multiply by your electricity rate per kWh. For example, a 1,500 W heater used 4 hours a day consumes 6 kWh per day. At $0.16/kWh, that is $0.96 per day or $28.80 for 30 days.</p></details>
       <details><summary>Will this match my electricity bill?</summary><p>This calculates the usage cost of the appliances you enter. Your bill may also include standing charges, taxes, other appliances, or rates that change with usage or time of day. To estimate an entire bill, account for those items separately.</p></details>

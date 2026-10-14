@@ -40,6 +40,60 @@ const path = require('node:path');
     await page.reload();
     assert.equal(await page.locator('#remember').isChecked(), true);
     await page.locator('#reset').click();
+    const guidePaths = ['/guides/space-heater-electricity-cost/', '/guides/air-conditioner-electricity-cost/', '/guides/refrigerator-electricity-cost/'];
+    const sitemap = await context.request.get('http://127.0.0.1:4173/sitemap.xml');
+    const sitemapText = await sitemap.text();
+    assert.equal(sitemap.status(), 200);
+    assert.equal((sitemapText.match(/<loc>/g)||[]).length, 4);
+    for (const guidePath of guidePaths) {
+      const response = await page.goto('http://127.0.0.1:4173' + guidePath);
+      assert.equal(response.status(), 200);
+      assert.equal(await page.locator('h1').count(), 1);
+      assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'), 'https://wattwise-electricity-cost.pages.dev' + guidePath);
+      assert.ok(sitemapText.includes('https://wattwise-electricity-cost.pages.dev' + guidePath));
+      for (const width of [320,375,768,1440]) {
+        await page.setViewportSize({ width, height: 900 });
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `Guide overflow at ${width}px: ${guidePath}`);
+      }
+      const internalLinks = await page.locator('a[href^="/"]').evaluateAll(links=>[...new Set(links.map(link=>link.getAttribute('href').split('#')[0]))]);
+      for (const href of internalLinks) assert.equal((await context.request.get('http://127.0.0.1:4173' + href)).status(),200,href);
+    }
+    await page.goto('http://127.0.0.1:4173/guides/refrigerator-electricity-cost/');
+    assert.equal(await page.locator('#annual-period').textContent(), '$6.58');
+    assert.equal(await page.locator('#annual-cost').textContent(), '$80.00');
+    await page.locator('#annual-energy').fill('365');
+    await page.locator('#annual-rate').fill('0.25');
+    await page.locator('#annual-days').fill('31');
+    assert.equal(await page.locator('#annual-period').textContent(), '$7.75');
+    assert.equal(await page.locator('#annual-cost').textContent(), '$91.25');
+    await page.locator('#annual-days').fill('366');
+    assert.equal(await page.locator('#annual-period').textContent(), '$91.50');
+    await page.locator('#annual-days').fill('30.5');
+    assert.equal(await page.locator('#annual-error').isVisible(), true);
+    assert.equal(await page.locator('#annual-period').textContent(), '—');
+    await page.locator('#annual-days').fill('30');
+    await page.locator('#annual-energy').fill('');
+    assert.equal(await page.locator('#annual-error').isVisible(), true);
+    await page.locator('#annual-energy').fill('0');
+    assert.equal(await page.locator('#annual-period').textContent(), '$0.00');
+    await page.locator('#annual-energy').fill('500');
+    await page.locator('#annual-rate').fill('0.16');
+    await page.screenshot({path:path.join(__dirname,'../artifacts/refrigerator-desktop.png'),fullPage:true});
+    await page.setViewportSize({width:375,height:900});
+    await page.screenshot({path:path.join(__dirname,'../artifacts/refrigerator-mobile.png'),fullPage:true});
+    await page.goto('http://127.0.0.1:4173/guides/air-conditioner-electricity-cost/');
+    await page.locator('.guide-cta').click();
+    assert.equal(await page.locator('#period-cost').textContent(), '$23.04');
+    assert.equal(await page.locator('#appliance-0-watts').inputValue(), '1200');
+    await page.goto('http://127.0.0.1:4173/guides/space-heater-electricity-cost/');
+    await page.locator('.guide-cta').click();
+    assert.equal(await page.locator('#period-cost').textContent(), '$28.80');
+    const staticContext = await browser.newContext({javaScriptEnabled:false});
+    const staticPage = await staticContext.newPage();
+    for (const guidePath of guidePaths) { await staticPage.goto('http://127.0.0.1:4173' + guidePath); assert.ok(await staticPage.locator('.article-body section').count() >= 5); assert.ok(await staticPage.locator('tbody tr').count() >= 3); }
+    await staticContext.close();
+    await page.goto('http://127.0.0.1:4173/');
+    assert.equal(await page.locator('.guide-card').count(), 3);
     assert.equal(await page.locator('#period-cost').textContent(), '$28.80');
     await page.locator('#remember').uncheck();
     assert.equal(await page.evaluate(() => localStorage.getItem('wattwise-settings-v1')), null);
@@ -55,6 +109,6 @@ const path = require('node:path');
     assert.match(await page.locator('#action-message').textContent(), /invalid/);
     assert.equal(await page.locator('#period-cost').textContent(), '$28.80');
     assert.deepEqual(errors, []);
-    console.log('Browser checks passed: inputs, totals, currency, validation, share round trip, CSV, local storage, examples, and layouts at 320/375/768/1440px. No JavaScript errors.');
+    console.log('Browser checks passed: original calculator, 3 static guides, internal links, guide example handoff, annual-label calculator validation and arithmetic, sitemap, no-JavaScript content, and layouts at 320/375/768/1440px. No JavaScript errors.');
   } finally { await browser.close(); }
 })().catch(e => {console.error(e);process.exitCode=1;});
